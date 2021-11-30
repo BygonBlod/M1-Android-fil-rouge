@@ -7,12 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".AddTaskActivity"
     android:orientation="vertical">
-    <Button
-        android:id="@+id/settings_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="settings"
-        android:onClick="launch_preferences"/>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,6 +21,7 @@
             android:gravity="center"
             android:text="@string/t_ches"/>
         <TextView
+            android:id="@+id/text_priorité"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

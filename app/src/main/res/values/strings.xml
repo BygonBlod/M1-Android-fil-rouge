@@ -9,4 +9,6 @@
     <string name="priorit">Priorité</string>
     <string name="t_ches">Tâches</string>
     <string name="entrer_votre_t_che">entrer votre tâche</string>
+    <string name="pref_setting_1_key">clef_1</string>
+    <string name="pref_setting_2_key">clef_2</string>
 </resources>

@@ -5,5 +5,9 @@
     <item android:title="@string/menu_action_1"
         android:id="@+id/menu_action_1"
         android:orderInCategory="1"
-        app:showAsAction="always"/>
+        app:showAsAction="collapseActionView"/>
+    <item android:title="Settings"
+        android:id="@+id/menu_action_2"
+        android:orderInCategory="2"
+        app:showAsAction="collapseActionView"/>
 </menu>

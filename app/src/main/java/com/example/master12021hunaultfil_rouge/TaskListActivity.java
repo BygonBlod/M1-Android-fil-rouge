@@ -3,10 +3,13 @@ package com.example.master12021hunaultfil_rouge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,19 +20,27 @@ import com.example.master12021hunaultfil_rouge.BD.TaskSQLHelper;
 
 import java.util.ArrayList;
 
-public class TaskListActivity extends AppCompatActivity {
+public class TaskListActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     private RecyclerView taskList;
     private TasksAdapter adapter;
     private TaskSQLHelper bd;
+    private TextView textPrio;
     static final int ACTIVITE_TACHE_RETOUR=1;
+    private SharedPreferences app_prefs;
 
     @Override
     protected void onCreate(Bundle state) {
         super.onCreate(state);
         setContentView(R.layout.task_list_activity);
+        textPrio=(TextView)findViewById(R.id.text_priorité);
+        app_prefs = PreferenceManager.getDefaultSharedPreferences(this);
         bd=new TaskSQLHelper(getApplicationContext());
         taskList = (RecyclerView) findViewById(R.id.tasks_list2);
-        adapter = new TasksAdapter(this,bd.getCursor());
+        int taille=Integer.parseInt(app_prefs.getString(getString(R.string.pref_setting_2_key),"20"));
+        Boolean cache=app_prefs.getBoolean(getString(R.string.pref_setting_1_key),false);
+        if(cache==true)textPrio.setText("");
+        else textPrio.setText("Priorité");
+        adapter = new TasksAdapter(this,bd.getCursor(),taille,cache);
         taskList.setAdapter(adapter);
         /*peut être utile si on sauvegarde d'autres données autre que dans la base
         if(state!=null){
@@ -72,6 +83,10 @@ public class TaskListActivity extends AppCompatActivity {
                 Intent intent=new Intent(TaskListActivity.this, AddTaskActivity.class);
                 startActivityForResult(intent,ACTIVITE_TACHE_RETOUR);
                 return true;
+            case R.id.menu_action_2:
+                Intent start=new Intent (this,SettingsActivity.class);
+                startActivity(start);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -95,8 +110,20 @@ public class TaskListActivity extends AppCompatActivity {
 
     }
 
-    public void launch_preferences(View view){
-        Intent start=new Intent (this,SettingsActivity.class);
-        startActivity(start);
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        int taille=Integer.parseInt(app_prefs.getString(getString(R.string.pref_setting_2_key),"20"));
+        Boolean cache=app_prefs.getBoolean(getString(R.string.pref_setting_1_key),false);
+        adapter=new TasksAdapter(this,bd.getCursor(),taille,cache);
+        taskList.setAdapter(adapter);
+        if(cache==true)textPrio.setText("");
+        else textPrio.setText("Priorité");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        app_prefs.registerOnSharedPreferenceChangeListener(this);
+
     }
 }

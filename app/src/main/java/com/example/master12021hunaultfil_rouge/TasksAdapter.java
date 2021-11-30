@@ -1,9 +1,8 @@
 package com.example.master12021hunaultfil_rouge;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.master12021hunaultfil_rouge.BD.TaskContract;
 
-import java.util.ArrayList;
-
 public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.Tasks_ViewHolder> {
     private Context m_context;
     private Cursor curseur;
+    private int text_size=20;
+    private Boolean cacher =false;
     //private ArrayList<TAskPrioriteItem> m_data;
 
 
@@ -49,6 +48,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.Tasks_ViewHo
         this.notifyItemRangeChanged(position,getItemCount()-position);
     }
 
+
     public class Tasks_ViewHolder extends RecyclerView.ViewHolder{
         private TextView priorite;
         private TextView task;
@@ -59,9 +59,11 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.Tasks_ViewHo
         }
     }
 
-    public TasksAdapter (Context context,Cursor c){
+    public TasksAdapter (Context context,Cursor c,int size,Boolean cache){
         m_context=context;
         curseur=c;
+        cacher=cache;
+        text_size=size;
     }
     @NonNull
     @Override
@@ -76,19 +78,22 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.Tasks_ViewHo
         //TAskPrioriteItem item=m_data.get(i);
         tasks_viewHolder.task.setText(curseur.getString(curseur.getColumnIndexOrThrow(TaskContract.TaskEntry.COLUMN_TASK)));
         int prioriteInt=Integer.parseInt(curseur.getString(curseur.getColumnIndexOrThrow(TaskContract.TaskEntry.COLUMN_PRIORITE)));
-        if(prioriteInt==1) {
-            //System.out.println("rouge");
-            tasks_viewHolder.priorite.setBackgroundResource(R.color.rouge);
-        }
-        if(prioriteInt==2) {
-            //System.out.println("orange");
-            tasks_viewHolder.priorite.setBackgroundResource(R.color.orange);
-        }
-        if(prioriteInt==3){
-            //System.out.println("jaune");
-            tasks_viewHolder.priorite.setBackgroundResource(R.color.jaune);
+        if(cacher!=true) {
+            if (prioriteInt == 1) {
+                //System.out.println("rouge");
+                tasks_viewHolder.priorite.setBackgroundResource(R.color.rouge);
+            }
+            if (prioriteInt == 2) {
+                //System.out.println("orange");
+                tasks_viewHolder.priorite.setBackgroundResource(R.color.orange);
+            }
+            if (prioriteInt == 3) {
+                //System.out.println("jaune");
+                tasks_viewHolder.priorite.setBackgroundResource(R.color.jaune);
+            }
         }
         tasks_viewHolder.itemView.setTag(i);
+        tasks_viewHolder.task.setTextSize(text_size);
 
     }
 
