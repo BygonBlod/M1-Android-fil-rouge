@@ -116,8 +116,8 @@ public class TaskListActivity extends AppCompatActivity implements SharedPrefere
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         textSize=Integer.parseInt(app_prefs.getString(getString(R.string.pref_setting_2_key),"20"));
         cacher=app_prefs.getBoolean(getString(R.string.pref_setting_1_key),false);
-        //adapter=new TasksAdapter(this,bd.getCursor(),taille,cache);
-        //taskList.setAdapter(adapter);
+        adapter=new TasksAdapter(this,bd.getCursor(),textSize,cacher);
+        taskList.setAdapter(adapter);
         if(cacher==true)textPrio.setText("");
         else textPrio.setText("Priorité");
     }
