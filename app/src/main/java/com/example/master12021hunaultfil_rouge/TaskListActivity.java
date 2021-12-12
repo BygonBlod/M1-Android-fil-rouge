@@ -27,6 +27,8 @@ public class TaskListActivity extends AppCompatActivity implements SharedPrefere
     private TextView textPrio;
     static final int ACTIVITE_TACHE_RETOUR=1;
     private SharedPreferences app_prefs;
+    private int textSize;
+    private boolean cacher;
 
     @Override
     protected void onCreate(Bundle state) {
@@ -36,11 +38,11 @@ public class TaskListActivity extends AppCompatActivity implements SharedPrefere
         app_prefs = PreferenceManager.getDefaultSharedPreferences(this);
         bd=new TaskSQLHelper(getApplicationContext());
         taskList = (RecyclerView) findViewById(R.id.tasks_list2);
-        int taille=Integer.parseInt(app_prefs.getString(getString(R.string.pref_setting_2_key),"20"));
-        Boolean cache=app_prefs.getBoolean(getString(R.string.pref_setting_1_key),false);
+        textSize=Integer.parseInt(app_prefs.getString(getString(R.string.pref_setting_2_key),"20"));
+        cacher=app_prefs.getBoolean(getString(R.string.pref_setting_1_key),false);
         if(cache==true)textPrio.setText("");
         else textPrio.setText("Priorité");
-        adapter = new TasksAdapter(this,bd.getCursor(),taille,cache);
+        adapter = new TasksAdapter(this,bd.getCursor(),textSize,cacher);
         taskList.setAdapter(adapter);
         /*peut être utile si on sauvegarde d'autres données autre que dans la base
         if(state!=null){
@@ -112,10 +114,10 @@ public class TaskListActivity extends AppCompatActivity implements SharedPrefere
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        int taille=Integer.parseInt(app_prefs.getString(getString(R.string.pref_setting_2_key),"20"));
-        Boolean cache=app_prefs.getBoolean(getString(R.string.pref_setting_1_key),false);
-        adapter=new TasksAdapter(this,bd.getCursor(),taille,cache);
-        taskList.setAdapter(adapter);
+        textSize=Integer.parseInt(app_prefs.getString(getString(R.string.pref_setting_2_key),"20"));
+        cacher=app_prefs.getBoolean(getString(R.string.pref_setting_1_key),false);
+        //adapter=new TasksAdapter(this,bd.getCursor(),taille,cache);
+        //taskList.setAdapter(adapter);
         if(cache==true)textPrio.setText("");
         else textPrio.setText("Priorité");
     }
